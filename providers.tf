@@ -26,6 +26,8 @@ resource "aws_s3_bucket" "tf_state" {
   }
 }
 
+// Configura o versionamento do bucket para armazenar o estado do terraform
+// É util para manter versões anteriores do estado do terraform
 resource "aws_s3_bucket_versioning" "tf_state" {
   bucket = aws_s3_bucket.tf_state.bucket
 
