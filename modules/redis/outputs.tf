@@ -1,6 +1,6 @@
 output "redis_endpoint" {
+  value = aws_elasticache_cluster.redis.cache_nodes[0].address
   description = "Endpoint de conexão do Redis"
-  value       = aws_elasticache_cluster.redis.configuration_endpoint
 }
 
 output "redis_port" {

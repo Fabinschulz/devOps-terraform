@@ -23,12 +23,12 @@ output "secret_key" {
   sensitive   = true
 }
 
-# output the ARN of the Redis role
-output "redis_role_arn" {
+output "iam_role_arn" {
   description = "ARN da Role para acesso ao Redis"
-  value       = module.redis_role.role_arn
+  value       = module.iam.role_arn
 }
 
+# output the ARN of the Redis role
 output "redis_endpoint_arn" {
   description = "Endpoint de conexão do Redis"
   value       = module.redis.redis_endpoint

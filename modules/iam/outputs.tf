@@ -8,3 +8,8 @@ output "iam_secret_key" {
   value       = aws_iam_access_key.this.secret
   sensitive   = true
 }
+
+output "role_arn" {
+  description = "ARN da Role criada"
+  value       = aws_iam_role.this.arn
+}

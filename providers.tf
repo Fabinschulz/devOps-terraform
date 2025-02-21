@@ -14,7 +14,7 @@ terraform {
 }
 
 provider "aws" {
-  region = var.aws_region
+  region  = var.aws_region
 }
 
 # Cria o bucket para armazenar o estado do terraform no S3

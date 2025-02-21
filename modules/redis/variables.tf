@@ -13,16 +13,19 @@ variable "cluster_id" {
 variable "num_cache_nodes" {
   description = "Número de nós no cluster Redis"
   type        = number
+  default     = 1
 }
 
 variable "parameter_group_name" {
   description = "Nome do grupo de parâmetros do Redis"
   type        = string
+  default     = "default.redis6.x"
 }
 
 variable "engine_version" {
   description = "Versão do Redis"
   type        = string
+  default     = "6.x" 
 }
 
 variable "port" {
@@ -39,11 +42,13 @@ variable "vpc_id" {
 variable "allowed_cidr_blocks" {
   description = "Lista de blocos CIDR permitidos para acessar o Redis"
   type        = list(string)
+  default     = ["10.0.0.0/16"]
 }
 
 variable "subnet_group_name" {
   description = "Nome do grupo de sub-redes para o Redis"
   type        = string
+  default     = "redis-subnet-group"
 }
 
 variable "subnet_ids" {
@@ -54,9 +59,23 @@ variable "subnet_ids" {
 variable "snapshot_retention_limit" {
   description = "Número de dias para reter snapshots"
   type        = number
+  default     = 7
 }
 
 variable "maintenance_window" {
   description = "Janela de manutenção para o Redis"
   type        = string
+  default     = "sun:05:00-sun:06:00"
+}
+
+variable "user_id" {
+  description = "ID do usuário do ElastiCache"
+  type        = string
+  default     = "synthra-user"
+}
+
+variable "user_name" {
+  description = "Nome do usuário do ElastiCache"
+  type        = string
+  default     = "synthra-user"
 }

@@ -36,3 +36,14 @@ resource "aws_elasticache_cluster" "redis" {
   snapshot_retention_limit = var.snapshot_retention_limit
   maintenance_window   = var.maintenance_window
 }
+
+resource "aws_elasticache_user" "redis_user" {
+  user_id       = var.user_id
+  user_name     = var.user_name
+  access_string = "on ~* +@all"
+  engine        = "REDIS"
+  passwords     = []
+  authentication_mode {
+    type = "iam"
+  }
+}

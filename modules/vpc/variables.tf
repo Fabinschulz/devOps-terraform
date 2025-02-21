@@ -17,7 +17,7 @@ variable "availability_zones" {
 }
 
 variable "environment" {
-  description = "Ambiente (ex: stg, prod)"
+  description = "Variável de ambiente"
   type        = string
   default     = "stg"
 }
