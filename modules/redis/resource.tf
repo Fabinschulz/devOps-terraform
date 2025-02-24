@@ -25,21 +25,26 @@ resource "aws_elasticache_subnet_group" "this" {
 
 # Criação do ElastiCache Replication Group (Cluster)
 resource "aws_elasticache_replication_group" "this" {
-  replication_group_id       = var.replication_group_id
+  replication_group_id          = var.replication_group_id
   description = "Synthra replication group"
-  node_type                  = var.node_type
-  engine                     = "redis"
-  engine_version             = var.engine_version
-  parameter_group_name       = var.parameter_group_name
-  automatic_failover_enabled = true
-  num_node_groups            = 1
-  replicas_per_node_group    = 1
-  security_group_ids         = [aws_security_group.this.id]
-  subnet_group_name          = aws_elasticache_subnet_group.this.name
+  node_type                     = var.node_type
+  engine                        = "redis"
+  engine_version                = var.engine_version
+  parameter_group_name          = var.parameter_group_name
+  automatic_failover_enabled    = true
+  num_node_groups               = 1
+  replicas_per_node_group       = 1
+  security_group_ids            = [aws_security_group.this.id]
+  subnet_group_name             = aws_elasticache_subnet_group.this.name
+  port                          = var.port
   
-  transit_encryption_enabled = true
-  at_rest_encryption_enabled = true
-  user_group_ids             = [aws_elasticache_user_group.this.user_group_id]
+  transit_encryption_enabled    = true
+  at_rest_encryption_enabled    = true
+  user_group_ids                = [aws_elasticache_user_group.this.user_group_id]
+
+  multi_az_enabled              = true
+  snapshot_retention_limit      = 7
+  maintenance_window            = "sun:05:00-sun:09:00"
 }
 
 # Criação do Security Group para ElastiCache

@@ -70,19 +70,19 @@ output "elasticache_security_group_egress_rules" {
   value       = module.redis.elasticache_security_group_egress_rules
 }
 
-# Output para o S3 Bucket Name
-output "s3_bucket_name" {
-  value       = module.s3.bucket_domain_name
-  sensitive   = false
-  description = "the name of the S3 bucket"
-}
+# # Output para o S3 Bucket Name
+# output "s3_bucket_name" {
+#   value       = module.s3.bucket_domain_name
+#   sensitive   = false
+#   description = "the name of the S3 bucket"
+# }
 
-# Output para o CDN Domain
-output "cdn_domain" {
-  value       = module.cloudfront.cdn_domain_name
-  sensitive   = false
-  description = "the domain name of the CloudFront distribution"
-}
+# # Output para o CDN Domain
+# output "cdn_domain" {
+#   value       = module.cloudfront.cdn_domain_name
+#   sensitive   = false
+#   description = "the domain name of the CloudFront distribution"
+# }
 
 # Output para o Access Key do IAM User
 output "access_key" {
