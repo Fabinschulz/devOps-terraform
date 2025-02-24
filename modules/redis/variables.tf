@@ -4,28 +4,16 @@ variable "node_type" {
   default     = "cache.t2.micro"
 }
 
-variable "cluster_id" {
-  description = "ID do cluster Redis"
-  type        = string
-  default     = "synthra-redis-cluster"
-}
-
-variable "num_cache_nodes" {
-  description = "Número de nós no cluster Redis"
-  type        = number
-  default     = 1
-}
-
 variable "parameter_group_name" {
   description = "Nome do grupo de parâmetros do Redis"
   type        = string
-  default     = "default.redis6.x"
+  default     = "default.redis7.cluster.on"
 }
 
 variable "engine_version" {
   description = "Versão do Redis"
   type        = string
-  default     = "6.x" 
+  default     = "7.0"
 }
 
 variable "port" {
@@ -56,18 +44,6 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-variable "snapshot_retention_limit" {
-  description = "Número de dias para reter snapshots"
-  type        = number
-  default     = 7
-}
-
-variable "maintenance_window" {
-  description = "Janela de manutenção para o Redis"
-  type        = string
-  default     = "sun:05:00-sun:06:00"
-}
-
 variable "user_id" {
   description = "ID do usuário do ElastiCache"
   type        = string
@@ -78,4 +54,19 @@ variable "user_name" {
   description = "Nome do usuário do ElastiCache"
   type        = string
   default     = "synthra-user"
+}
+
+variable "replication_group_id" {
+  description = "ID do grupo de replicação do ElastiCache"
+  type        = string
+  default     = "synthra-replication-group"
+}
+
+variable "sg_ingress_rule_source_security_group_ids" {
+  type = list(string)
+}
+
+variable "sg_ingress_rule_source_cidr" {
+  type    = list(string)
+  default = []
 }

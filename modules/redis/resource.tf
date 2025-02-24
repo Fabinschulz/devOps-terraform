@@ -1,12 +1,56 @@
-resource "aws_elasticache_subnet_group" "redis_subnet_group" {
+# Criação do ElastiCache User com autenticação IAM
+resource "aws_elasticache_user" "user" {
+  access_string = "on ~* +@all"
+  engine        = "REDIS"
+  user_id       = var.user_id
+  user_name     = var.user_name
+
+  authentication_mode {
+    type = "iam"
+  }
+}
+
+# Criação do ElastiCache User Group
+resource "aws_elasticache_user_group" "this" {
+  engine        = "REDIS"
+  user_group_id = "user-group-alpha"
+  user_ids      = [aws_elasticache_user.user.id, "default"]
+}
+
+# Criação do Subnet Group para ElastiCache
+resource "aws_elasticache_subnet_group" "this" {
   name       = var.subnet_group_name
   subnet_ids = var.subnet_ids
 }
 
-resource "aws_security_group" "redis_sg" {
+# Criação do ElastiCache Replication Group (Cluster)
+resource "aws_elasticache_replication_group" "this" {
+  replication_group_id       = var.replication_group_id
+  description = "Synthra replication group"
+  node_type                  = var.node_type
+  engine                     = "redis"
+  engine_version             = var.engine_version
+  parameter_group_name       = var.parameter_group_name
+  automatic_failover_enabled = true
+  num_node_groups            = 1
+  replicas_per_node_group    = 1
+  security_group_ids         = [aws_security_group.this.id]
+  subnet_group_name          = aws_elasticache_subnet_group.this.name
+  
+  transit_encryption_enabled = true
+  at_rest_encryption_enabled = true
+  user_group_ids             = [aws_elasticache_user_group.this.user_group_id]
+}
+
+# Criação do Security Group para ElastiCache
+resource "aws_security_group" "this" {
   name        = "redis-security-group"
-  description = "Security group for Redis"
+  description = "Allow TLS inbound traffic"
   vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "redis-security-group"
+  }
 
   ingress {
     from_port   = var.port
@@ -23,27 +67,22 @@ resource "aws_security_group" "redis_sg" {
   }
 }
 
-resource "aws_elasticache_cluster" "redis" {
-  cluster_id           = var.cluster_id
-  engine               = "redis"
-  node_type            = var.node_type
-  num_cache_nodes      = var.num_cache_nodes
-  parameter_group_name = var.parameter_group_name
-  engine_version       = var.engine_version
-  port                 = var.port
-  security_group_ids   = [aws_security_group.redis_sg.id]
-  subnet_group_name    = aws_elasticache_subnet_group.redis_subnet_group.name
-  snapshot_retention_limit = var.snapshot_retention_limit
-  maintenance_window   = var.maintenance_window
+resource "aws_security_group_rule" "ingress_from_cidr" {
+  count             = length(var.sg_ingress_rule_source_cidr) > 0 ? 1 : 0
+  from_port         = var.port
+  protocol          = "tcp"
+  cidr_blocks       = var.sg_ingress_rule_source_cidr
+  to_port           = var.port
+  type              = "ingress"
+  security_group_id = aws_security_group.this.id
 }
 
-resource "aws_elasticache_user" "redis_user" {
-  user_id       = var.user_id
-  user_name     = var.user_name
-  access_string = "on ~* +@all"
-  engine        = "REDIS"
-  passwords     = []
-  authentication_mode {
-    type = "iam"
-  }
+resource "aws_security_group_rule" "ingress_from_source_sg_id" {
+  count                    = length(var.sg_ingress_rule_source_security_group_ids)
+  from_port                = var.port
+  protocol                 = "tcp"
+  source_security_group_id = element(var.sg_ingress_rule_source_security_group_ids, count.index)
+  to_port                  = var.port
+  type                     = "ingress"
+  security_group_id        = aws_security_group.this.id
 }

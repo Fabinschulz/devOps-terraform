@@ -15,25 +15,26 @@ terraform {
 
 provider "aws" {
   region  = var.aws_region
+  profile = var.aws_profile
 }
 
-# Cria o bucket para armazenar o estado do terraform no S3
-resource "aws_s3_bucket" "tf_state" {
-  bucket = var.bucket_state
+# # Cria o bucket para armazenar o estado do terraform no S3
+# resource "aws_s3_bucket" "tf_state" {
+#   bucket = var.bucket_state
 
-  lifecycle {
-    prevent_destroy = true // Previne a exclusão do bucket
-  }
-}
+#   lifecycle {
+#     prevent_destroy = true // Previne a exclusão do bucket
+#   }
+# }
 
-// Configura o versionamento do bucket para armazenar o estado do terraform
-// É util para manter versões anteriores do estado do terraform
-resource "aws_s3_bucket_versioning" "tf_state" {
-  bucket = aws_s3_bucket.tf_state.bucket
+# // Configura o versionamento do bucket para armazenar o estado do terraform
+# // É util para manter versões anteriores do estado do terraform
+# resource "aws_s3_bucket_versioning" "tf_state" {
+#   bucket = aws_s3_bucket.tf_state.bucket
 
-  versioning_configuration {
-    status = "Enabled"
-  }
+#   versioning_configuration {
+#     status = "Enabled"
+#   }
 
-  depends_on = [aws_s3_bucket.tf_state]
-}
+#   depends_on = [aws_s3_bucket.tf_state]
+# }
