@@ -13,7 +13,7 @@ resource "aws_elasticache_user" "user" {
 # Criação do ElastiCache User Group
 resource "aws_elasticache_user_group" "this" {
   engine        = "REDIS"
-  user_group_id = "user-group-alpha"
+  user_group_id = "user-group-master"
   user_ids      = [aws_elasticache_user.user.id, "default"]
 }
 
@@ -47,6 +47,7 @@ resource "aws_elasticache_replication_group" "this" {
   maintenance_window            = "sun:05:00-sun:09:00"
 }
 
+
 # Criação do Security Group para ElastiCache
 resource "aws_security_group" "this" {
   name        = "redis-security-group"
@@ -54,9 +55,17 @@ resource "aws_security_group" "this" {
   vpc_id      = var.vpc_id
 
   tags = {
-    Name = "redis-security-group"
+    Name = "security-group-v1"
   }
 
+  ingress {
+    from_port   = var.port
+    to_port     = var.port
+    protocol    = "tcp"
+    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]
+  }
+
+ # Tráfego de saída
   ingress {
     from_port   = var.port
     to_port     = var.port
@@ -64,6 +73,7 @@ resource "aws_security_group" "this" {
     cidr_blocks = var.allowed_cidr_blocks
   }
 
+ # Tráfego de saída
   egress {
     from_port   = 0
     to_port     = 0

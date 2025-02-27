@@ -17,8 +17,15 @@
 #   depends_on = [module.s3]
 # }
 
+module "function" {
+  source = "./modules/iam/function"
+
+  role_name             = "ec2-elastic-beanstalk-role"
+  instance_profile_name = "ec2-elastic-beanstalk-profile"
+}
+
 module "iam" {
-  source = "./modules/iam"
+  source = "./modules/iam/iam"
 
   role_name   = var.redis_role_name
   policy_name = var.redis_policy_name
@@ -38,6 +45,7 @@ module "redis" {
   vpc_id                                    = module.vpc.vpc_id
   subnet_ids                                = module.vpc.public_subnet_ids
   sg_ingress_rule_source_security_group_ids = [module.vpc.vpc_default_security_group_id]
+  my_ip                                     = chomp(data.http.my_ip.response_body)
 }
 
 # module "ec2" {

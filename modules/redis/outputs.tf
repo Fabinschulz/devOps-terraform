@@ -85,3 +85,7 @@ output "elasticache_security_group_egress_rules" {
     }
   ]
 }
+
+output "my_public_ip" {
+  value = chomp(data.http.my_ip.response_body)
+}

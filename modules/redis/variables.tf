@@ -7,7 +7,7 @@ variable "node_type" {
 variable "parameter_group_name" {
   description = "Nome do grupo de parâmetros do Redis"
   type        = string
-  default     = "default.redis7.cluster.on"
+  default     = "default.redis7"
 }
 
 variable "engine_version" {
@@ -69,4 +69,9 @@ variable "sg_ingress_rule_source_security_group_ids" {
 variable "sg_ingress_rule_source_cidr" {
   type    = list(string)
   default = []
+}
+
+variable "my_ip" {
+  type        = string
+  description = "O IP público do usuário para acesso ao Redis"
 }
