@@ -125,7 +125,7 @@ output "public_subnet_ids" {
 }
 
 #****** Output para os IDs das Subnets Privadas*******
-output "private_subnet_ids" {
-  description = "IDs das subnets privadas"
-  value       = module.vpc.private_subnet_ids
-}
+# output "private_subnet_ids" {
+#   description = "IDs das subnets privadas"
+#   value       = module.vpc.private_subnet_ids
+# }
